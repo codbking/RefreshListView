@@ -2,6 +2,7 @@ package com.codbking.refreshlistview.example.listview.morepage;
 
 import android.database.DataSetObserver;
 import android.support.v4.widget.ContentLoadingProgressBar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,7 +114,6 @@ public class WrapperMorePageListAdapter<T extends ListAdapter> extends BaseAdapt
         return adapter.isEmpty();
     }
 
-
     public View getMoreView(View view, ViewGroup viewGroup) {
 
         if (view == null) {
@@ -122,6 +122,7 @@ public class WrapperMorePageListAdapter<T extends ListAdapter> extends BaseAdapt
 
         TextView textTv = ViewHolder.getView(view, R.id.textTv);
         ContentLoadingProgressBar progressBar = ViewHolder.getView(view, R.id.progressBar);
+
 
         switch(status){
             case MoreContact.Present.STATE_FINISH:
@@ -137,6 +138,8 @@ public class WrapperMorePageListAdapter<T extends ListAdapter> extends BaseAdapt
                 textTv.setText("数据加载中...");
                 break;
         }
+
+        Log.d(TAG, "getMoreView() called with: view = [" + view + "], status = [" + status + "]");
 
         return view;
     }
@@ -179,7 +182,6 @@ public class WrapperMorePageListAdapter<T extends ListAdapter> extends BaseAdapt
     public String toString() {
         return adapter.toString();
     }
-
 
 
 }

@@ -32,16 +32,6 @@ public abstract class BaseMorePageListView<T extends View, E, F> extends BaseLis
         super(context, attrs);
     }
 
-    @Override
-    public void setShowError() {
-        isLoad = false;
-        if (getCount() > 0) {
-            //刷新数据
-            setStatus(MoreContact.Present.STATE_ERROR);
-        } else {
-            super.setShowError();
-        }
-    }
 
     @Override
     public void setAdapter(E adapter) {
@@ -56,9 +46,10 @@ public abstract class BaseMorePageListView<T extends View, E, F> extends BaseLis
 
     public void onScroll(T view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         if (firstVisibleItem + visibleItemCount == totalItemCount) {
-            if (!isLoad) {
-                mPageBean.nextPage();
-                loadData(null);
+            Log.d(TAG, "onScroll() called with: view = [" + view + "], firstVisibleItem = [" + firstVisibleItem + "], visibleItemCount = [" + visibleItemCount + "], getStatus = [" + mPageBean.getStatus() + "]");
+            if (!isLoad&&mPageBean.getStatus()!= MoreContact.Present.STATE_FINISH&&mPageBean.getStatus()!= MoreContact.Present.STATE_NONE) {
+                  mPageBean.nextPage();
+                  loadData(null);
             }
         }
     }
@@ -74,7 +65,7 @@ public abstract class BaseMorePageListView<T extends View, E, F> extends BaseLis
             mOnLoadListerner.loadData(mPageBean.getPageIndex(), mPageBean.getPageSize(), new OnLoadCallBack() {
                 @Override
                 public void onSuccess(int pageCount) {
-
+                    Log.d(TAG, "onSuccess() called with: pageCount = [" + pageCount + "]");
                     isLoad=false;
                     mPageBean.setCurrentSize(pageCount);
                     setStatus(mPageBean.getStatus());
@@ -87,13 +78,18 @@ public abstract class BaseMorePageListView<T extends View, E, F> extends BaseLis
                 @Override
                 public void onFail(boolean isShowError) {
                     isLoad=false;
-                    mPageBean.setCurrentSize(0);
-                    setShowError();
+
+                    if (mPageBean.getPageIndex()>1) {
+                        //刷新数据
+                        setStatus(MoreContact.Present.STATE_ERROR);
+                        mPageBean.setPageIndex(mPageBean.getPageIndex()-1);
+                    } else {
+                        BaseMorePageListView.this.setShowError();
+                    }
 
                     if(callBack!=null){
                         callBack.onFail(isShowError);
                     }
-
                 }
             });
         }

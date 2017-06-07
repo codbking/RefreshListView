@@ -23,7 +23,7 @@ public class RetrofitHelper {
     private static Retrofit.Builder mBuilder;
     private static OkHttpClient client;
 
-    public static final String HOST ="http://10.60.172.14:8080/ljj/";
+    public static final String HOST ="http://192.168.56.1:8080/ljj/";
 
     static {
 

@@ -1,5 +1,6 @@
 package com.codbking.refreshlistview.example.listview.morepage;
 
+
 import com.codbking.refreshlistview.example.listview.morepage.contact.MoreContact;
 
 /**
@@ -8,20 +9,19 @@ import com.codbking.refreshlistview.example.listview.morepage.contact.MoreContac
 
 public class MorePresent implements MoreContact.Present {
 
-    private int pageSize=20;
-    private int pageIndex=1;
+    private static final String TAG = "MorePresent";
+
+    private int pageSize = 20;
+    private int pageIndex = 1;
 
     //加载的数据
     private int currentSize;
 
-    private boolean isError;
-
-
     public MorePresent() {
     }
 
-    public void init(){
-        pageIndex=1;
+    public void init() {
+        pageIndex = 1;
     }
 
     public MorePresent(int pageSize, int pageIndex) {
@@ -30,24 +30,20 @@ public class MorePresent implements MoreContact.Present {
     }
 
     public void setCurrentSize(int currentSize) {
-        if(currentSize<pageSize){
-            pageIndex--;
-        }
-
-
-        if(pageIndex<1){
-            pageIndex=1;
-        }
-
         this.currentSize = currentSize;
     }
 
     public void setPageIndex(int pageIndex) {
+
+        if (pageIndex < 0) {
+            pageIndex = 1;
+        }
         this.pageIndex = pageIndex;
+
     }
 
-    public void nextPage(){
-             pageIndex++;
+    public void nextPage() {
+        pageIndex++;
     }
 
     public int getPageSize() {
@@ -59,26 +55,17 @@ public class MorePresent implements MoreContact.Present {
     }
 
 
-    public boolean isError() {
-        return isError;
-    }
-
-    public void setError(boolean error) {
-        isError = error;
-    }
-
     @Override
     public int getStatus() {
-        if(currentSize<pageSize){
-            if(pageIndex==1){
+        if (currentSize < pageSize) {
+            if (pageIndex == 1) {
                 return STATE_NONE;
-            }else {
+            } else {
                 return STATE_FINISH;
             }
         }
         return STATE_LOAD;
     }
-
 
 
 }

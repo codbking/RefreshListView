@@ -95,16 +95,21 @@ public class SwipeRefreshMorePageListView extends BaseMorePageListView<SwipeRefr
         }
     }
 
+    private int scrollState;
+
     @Override
     public void setOnScrollListener(SwipeRefreshLayout listview) {
         mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
+                Log.d(TAG, "onScrollStateChanged() called with: view = [" + view + "], scrollState = [" + scrollState + "]");
+                SwipeRefreshMorePageListView.this.scrollState=scrollState;
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if(totalItemCount==0){
+                Log.d(TAG, "onScroll() called with: view = [" + view + "], firstVisibleItem = [" + firstVisibleItem + "], visibleItemCount = [" + visibleItemCount + "], totalItemCount = [" + totalItemCount + "]");
+                if(totalItemCount==0||scrollState==0){
                     return;
                 }
                 SwipeRefreshMorePageListView.this.onScroll((SwipeRefreshLayout) mListView.getParent(), firstVisibleItem, visibleItemCount, totalItemCount);
